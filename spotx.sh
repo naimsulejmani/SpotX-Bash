@@ -196,19 +196,14 @@ macos_set_version() {
   [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && { legacyMac="10.13-14"; legacyMaxVer="1.2.20.1218"; return; }
   [[ "${macOSVer}" == "10.15" ]] && { legacyMac="10.15"; legacyMaxVer="1.2.37.701"; return; }
   [[ "${macOSVer}" == "11" ]] && { legacyMac="11"; legacyMaxVer="1.2.66.447"; return; }
+  [[ "${macOSVer}" == "12" ]] && { legacyMac="12"; legacyMaxVer="1.2.98.301"; return; }
   [[ "${rollback}" ]] && versionVar="${rollbackVer}" || versionVar="${buildVer}"
 }
 
 macos_legacy_notice() {
-  local reason="${1}" dGrab
-  local d1112=$(echo "=k2YXJ2a1kWT4BzUNhHND1EewMVZtx2RkZnQzUld4ITW1RzRapmTux0aGJjYzVjMkZnUywkdvR0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
-  local d1314=$(echo "90zZJ5WMHpVdRRVT01EVNVXQU1Edr5mWwJ1MidnTxwkdO1GT1JlMZpXNDpFa5ckY1R2MitWO5xkNNh0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
-  local d1015=$(echo "=0TPnlkbxckW1VFVNVXQU1Edr5mWwJ1MidnTxwkdO1GT1JlMZpXNDpFa5ckY1R2MitWO5xkNNh0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
-  [[ "${legacyMac}" == "10.11-12" ]] && dGrab=$(eval "${d1112}")
-  [[ "${legacyMac}" == "10.13-14" ]] && dGrab=$(eval "${d1314}")
-  [[ "${legacyMac}" == "10.15" || "${legacyMac}" == "11" ]] && dGrab=$(eval "${d1015}")
-  [[ "${reason}" == "toohigh" ]] && { echo -e "\n${red}Error:${clr} v${clientVer} not supported on macOS ${macOSVer} (max: ${legacyMaxVer}).\nInstall compatible version then re-run SpotX-Bash:\n\n${green} -> ${dGrab}${clr}\n" >&2; exit 1; }
-  echo -e "\n${yellow}Warning:${clr} macOS ${macOSVer} not supported by current Spotify builds.\nDownload and install compatible version (max: ${legacyMaxVer}) then re-run SpotX-Bash:\n\n${green} -> ${dGrab}${clr}\n"
+  local reason="${1}"
+  [[ "${reason}" == "toohigh" ]] && { echo -e "\n${red}Error:${clr} v${clientVer} not supported on macOS ${macOSVer} (max: ${legacyMaxVer}).\nInstall a compatible Spotify version manually, then re-run SpotX-Bash.\n" >&2; exit 1; }
+  echo -e "\n${yellow}Warning:${clr} Automatic Spotify installation is unavailable on macOS ${macOSVer}.\nInstall a compatible Spotify version manually (max: ${legacyMaxVer}), then re-run SpotX-Bash.\n"
   exit 0
 }
 
@@ -462,7 +457,9 @@ existing_client_ver() {
 }
 
 client_version_output() {
-  echo -e "Latest supported version: ${sxbVer}"
+  local supportedVer="${sxbVer}"
+  [[ "${platformType}" == "macOS" && "${legacyMac}" ]] && supportedVer="${legacyMaxVer}"
+  echo -e "Latest supported version: ${supportedVer}"
   [[ "${forceVer}" ]] && {
     echo -e "Forced client version: ${forceVer}\n"; return
   }

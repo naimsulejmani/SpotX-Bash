@@ -24,8 +24,9 @@
 - Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
 - Block automatic updates (macOS)
-- Install latest desktop client versions on macOS and APT-based Linux distros
+- Install latest desktop client versions on macOS 13+ and APT-based Linux distros
 - Supports all Linux distros and OS X/macOS 10.11+
+- Older macOS releases require a compatible Spotify client installed manually; see the [version timeline](https://github.com/SpotX-Official/SpotX-Bash/wiki/Spotify-Desktop-Client-Version-Timeline).
 
 ### Usage:
 
